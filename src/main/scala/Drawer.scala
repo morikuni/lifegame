@@ -7,15 +7,15 @@ class Drawer(val canvasWidth: Int, val canvasHeight: Int){
 		val cellWidth = canvasWidth / stage.width
 		val cellHeight = canvasHeight / stage.height
 
-		val points = for{
+		val cells = for{
 			y <- Range(0, stage.height)
 			x <- Range(0, stage.width)
-		} yield Point(x, y)
+		} yield Cell(x, y)
 
-		for(p <- points){
-			val canvasX = p.x * cellWidth
-			val canvasY = p.y * cellHeight
-			if(stage.livingCells.contains(p)) drawLivingCells(ctx, canvasX, canvasY, cellWidth, cellHeight)
+		for(c <- cells){
+			val canvasX = c.x * cellWidth
+			val canvasY = c.y * cellHeight
+			if(stage.livingCells.contains(c)) drawLivingCells(ctx, canvasX, canvasY, cellWidth, cellHeight)
 			else drawDeadCells(ctx, canvasX, canvasY, cellWidth, cellHeight)
 		}
 	}

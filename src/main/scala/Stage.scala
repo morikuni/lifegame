@@ -2,16 +2,16 @@ package morikuni.lifegame
 
 import util.Random
 
-case class Stage(val width: Int, val height: Int, val livingCells: Set[Point]){
+case class Stage(val width: Int, val height: Int, val livingCells: Set[Cell]){
 	lazy val next: Stage = {
 		val checkTargets = for{
-			p1 <- livingCells
-			p2 <- getAroundCells(p1)
-		} yield p2
+			c1 <- livingCells
+			c2 <- getAroundCells(c1)
+		} yield c2
 
-		val nextLivingCells = checkTargets.filter{ p =>
-			val aroundLivengCellsCount = getAroundCells(p).filter(livingCells.contains).size
-			if(isLiving(p))
+		val nextLivingCells = checkTargets.filter{ c =>
+			val aroundLivengCellsCount = getAroundCells(c).filter(livingCells.contains).size
+			if(isLiving(c))
 				aroundLivengCellsCount == 2 || aroundLivengCellsCount == 3
 			else
 				aroundLivengCellsCount == 3
@@ -20,28 +20,28 @@ case class Stage(val width: Int, val height: Int, val livingCells: Set[Point]){
 		copy(livingCells = nextLivingCells)
 	}
 
-	def putLivingCells(points: Set[Point]): Stage = copy(livingCells = livingCells ++ points)
-	def putLivingCell(point: Point): Stage = copy(livingCells = livingCells + point)
+	def putLivingCells(cells: Set[Cell]): Stage = copy(livingCells = livingCells ++ cells)
+	def putLivingCell(cell: Cell): Stage = copy(livingCells = livingCells + cell)
 
-	def getAroundCells(point: Point): Set[Point] = {
+	def getAroundCells(cell: Cell): Set[Cell] = {
 		(for{
-			y <- Range(point.y-1, point.y+2)
+			y <- Range(cell.y-1, cell.y+2)
 			if(y >= 0 && y < height)
-			x <- Range(point.x-1, point.x+2)
+			x <- Range(cell.x-1, cell.x+2)
 			if(x >= 0 && x < width)
-		} yield Point(x, y)).toSet - point
+		} yield Cell(x, y)).toSet - cell
 	}
 
-	def isLiving(p: Point): Boolean = livingCells.contains(p)
+	def isLiving(c: Cell): Boolean = livingCells.contains(c)
 }
 
 object Stage{
 	def random(width: Int, height: Int): Stage = {
-		val points = for{
+		val cells = for{
 			y <- Range(0, height)
 			x <- Range(0, width)
-		} yield Point(x, y)
+		} yield Cell(x, y)
 
-		Stage(width, height, points.filter(_ => Random.nextBoolean).toSet)
+		Stage(width, height, cells.filter(_ => Random.nextBoolean).toSet)
 	}
 }
