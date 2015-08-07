@@ -10,7 +10,7 @@ case class Stage(val width: Int, val height: Int, val livingCells: Set[Cell]){
 		} yield c2
 
 		val nextLivingCells = checkTargets.filter{ c =>
-			val aroundLivengCellsCount = getAroundCells(c).filter(livingCells.contains).size
+			val aroundLivengCellsCount = getAroundCells(c).filter(isLiving).size
 			if(isLiving(c))
 				aroundLivengCellsCount == 2 || aroundLivengCellsCount == 3
 			else
